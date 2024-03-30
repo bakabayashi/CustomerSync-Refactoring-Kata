@@ -17,12 +17,15 @@ public class CustomerDataAccess {
             verify(matchByExternalId, externalId, CustomerType.COMPANY);
             matches.setCustomer(matchByExternalId);
             Customer matchByMasterId = this.customerDataLayer.findByMasterExternalId(externalId);
-            if (matchByMasterId != null)
+            if (matchByMasterId != null) {
+                matchByMasterId.setName(externalCustomer.getName());
                 matches.addDuplicate(matchByMasterId);
+            }
 
             String customerCompanyNumber = matchByExternalId.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) {
                 matchByExternalId.setMasterExternalId(null);
+                matchByExternalId.setName(externalCustomer.getName());
                 matches.addDuplicate(matchByExternalId);
                 matches.setCustomer(null);
             }
@@ -39,6 +42,7 @@ public class CustomerDataAccess {
                 matchByCompanyNumber.setExternalId(externalId);
                 matchByCompanyNumber.setMasterExternalId(externalId);
                 Customer duplicate = new Customer();
+                duplicate.setName(externalCustomer.getName());
                 duplicate.setExternalId(externalCustomer.getExternalId());
                 duplicate.setMasterExternalId(externalCustomer.getExternalId());
                 matches.addDuplicate(duplicate);

@@ -43,7 +43,7 @@ public class CustomerSync {
 
         if (customerMatches.hasDuplicates()) {
             for (Customer duplicate : customerMatches.getDuplicates()) {
-                updateDuplicate(externalCustomer, duplicate);
+                updateDuplicate(duplicate);
             }
         }
 
@@ -64,9 +64,7 @@ public class CustomerSync {
         return this.customerDataAccess.updateCustomerRecord(customer);
     }
 
-    private void updateDuplicate(ExternalCustomer externalCustomer, Customer duplicate) {
-        duplicate.setName(externalCustomer.getName());
-
+    private void updateDuplicate(Customer duplicate) {
         if (duplicate.getInternalId() == null) {
             createCustomer(duplicate);
         } else {
