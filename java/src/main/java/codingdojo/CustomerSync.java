@@ -28,10 +28,10 @@ public class CustomerSync {
 
         boolean created = false;
         if (customer.getInternalId() == null) {
-            customer = createCustomer(customer);
+            customer = this.customerDataAccess.createCustomerRecord(customer);
             created = true;
         } else {
-            updateCustomer(customer);
+            this.customerDataAccess.updateCustomerRecord(customer);
         }
         updateContactInfo(externalCustomer, customer);
 
@@ -54,24 +54,16 @@ public class CustomerSync {
         }
     }
 
-    private Customer updateCustomer(Customer customer) {
-        return this.customerDataAccess.updateCustomerRecord(customer);
-    }
-
     private void updateDuplicate(Customer duplicate) {
         if (duplicate.getInternalId() == null) {
-            createCustomer(duplicate);
+            this.customerDataAccess.createCustomerRecord(duplicate);
         } else {
-            updateCustomer(duplicate);
+            this.customerDataAccess.updateCustomerRecord(duplicate);
         }
     }
 
     private void updatePreferredStore(ExternalCustomer externalCustomer, Customer customer) {
         customer.setPreferredStore(externalCustomer.getPreferredStore());
-    }
-
-    private Customer createCustomer(Customer customer) {
-        return this.customerDataAccess.createCustomerRecord(customer);
     }
 
     private void populateFields(ExternalCustomer externalCustomer, Customer customer) {
