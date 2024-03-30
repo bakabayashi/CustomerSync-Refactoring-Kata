@@ -27,7 +27,7 @@ public class CustomerDataAccess {
                 matchByExternalId.setMasterExternalId(null);
                 matchByExternalId.setName(externalCustomer.getName());
                 matches.addDuplicate(matchByExternalId);
-                matches.setCustomer(null);
+                matches.setCustomer(createCustomer(externalCustomer));
             }
         } else {
             Customer matchByCompanyNumber = this.customerDataLayer.findByCompanyNumber(companyNumber);
@@ -46,6 +46,8 @@ public class CustomerDataAccess {
                 duplicate.setExternalId(externalCustomer.getExternalId());
                 duplicate.setMasterExternalId(externalCustomer.getExternalId());
                 matches.addDuplicate(duplicate);
+            } else {
+                matches.setCustomer(createCustomer(externalCustomer));
             }
         }
 
@@ -63,7 +65,12 @@ public class CustomerDataAccess {
         CustomerMatches matches = new CustomerMatches();
         Customer matchByPersonalNumber = this.customerDataLayer.findByExternalId(externalId);
         verify(matchByPersonalNumber, externalId, CustomerType.PERSON);
-        matches.setCustomer(matchByPersonalNumber);
+
+        if(matchByPersonalNumber==null) {
+            matches.setCustomer(createCustomer(externalCustomer));
+        } else {
+            matches.setCustomer(matchByPersonalNumber);
+        }
 
         return matches;
     }
@@ -80,5 +87,12 @@ public class CustomerDataAccess {
         customer.addShoppingList(consumerShoppingList);
         customerDataLayer.updateShoppingList(consumerShoppingList);
         customerDataLayer.updateCustomerRecord(customer);
+    }
+
+    private Customer createCustomer(ExternalCustomer externalCustomer) {
+        Customer customer = new Customer();
+        customer.setExternalId(externalCustomer.getExternalId());
+        customer.setMasterExternalId(externalCustomer.getExternalId());
+        return customer;
     }
 }

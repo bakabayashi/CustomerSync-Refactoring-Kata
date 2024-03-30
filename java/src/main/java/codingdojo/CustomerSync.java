@@ -22,14 +22,8 @@ public class CustomerSync {
         } else {
             customerMatches = loadPerson(externalCustomer);
         }
+
         Customer customer = customerMatches.getCustomer();
-
-        if (customer == null) {
-            customer = new Customer();
-            customer.setExternalId(externalCustomer.getExternalId());
-            customer.setMasterExternalId(externalCustomer.getExternalId());
-        }
-
         populateFields(externalCustomer, customer);
 
         boolean created = false;
