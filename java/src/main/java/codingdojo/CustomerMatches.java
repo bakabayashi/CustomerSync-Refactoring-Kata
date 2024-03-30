@@ -11,9 +11,6 @@ public class CustomerMatches {
     private Collection<Customer> duplicates = new ArrayList<>();
 
     @Setter
-    private String matchTerm;
-
-    @Setter
     private Customer customer;
 
     public boolean hasDuplicates() {
