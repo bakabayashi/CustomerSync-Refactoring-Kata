@@ -2,6 +2,8 @@ package codingdojo;
 
 import static codingdojo.CustomerValidator.*;
 
+import java.util.List;
+
 public class CustomerDataAccess {
 
     private final CustomerDataLayer customerDataLayer;
@@ -10,10 +12,9 @@ public class CustomerDataAccess {
         this.customerDataLayer = customerDataLayer;
     }
 
-    public CustomerMatches loadCompanyCustomer(ExternalCustomer externalCustomer) {
+    public boolean loadCompanyCustomer(ExternalCustomer externalCustomer) {
         final String externalId = externalCustomer.getExternalId();
         final String companyNumber = externalCustomer.getCompanyNumber();
-        CustomerMatches matches = new CustomerMatches();
         Customer customer = this.customerDataLayer.findByExternalId(externalId);
 
         if (customer != null) {
@@ -21,53 +22,55 @@ public class CustomerDataAccess {
             Customer matchByMasterId = this.customerDataLayer.findByMasterExternalId(externalId);
             if (matchByMasterId != null) {
                 matchByMasterId.setName(externalCustomer.getName());
-                matches.addDuplicate(matchByMasterId);
+                updateCustomerRecord(matchByMasterId);
             }
 
             String customerCompanyNumber = companyCustomer.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) {
                 companyCustomer.setMasterExternalId(null);
                 companyCustomer.setName(externalCustomer.getName());
-                matches.addDuplicate(companyCustomer);
+                updateCustomerRecord(companyCustomer);
                 customer = CustomerFactory.create(externalCustomer);
             }
         } else {
             customer = this.customerDataLayer.findByCompanyNumber(companyNumber);
             if (customer != null) {
                 validateCustomerType(customer, externalId, CustomerType.COMPANY);
-                matches.setCustomer(customer);
+                updateCustomerRecord(customer);
                 String customerExternalId = customer.getExternalId();
                 validateExternalId(customerExternalId, externalId, companyNumber);
                 customer.setExternalId(externalId);
                 customer.setMasterExternalId(externalId);
                 Customer duplicate = CustomerFactory.create(externalCustomer);
-                matches.addDuplicate(duplicate);
+                createCustomerRecord(duplicate);
             } else {
                 customer = CustomerFactory.create(externalCustomer);
             }
         }
 
         customer.populateFields(externalCustomer);
-        matches.setCustomer(customer);
+        updateShoppingList(customer, externalCustomer.getShoppingLists());
 
-        return matches;
+        return mergeCustomer(customer);
     }
 
-    public CustomerMatches loadPersonCustomer(ExternalCustomer externalCustomer) {
+    public boolean loadPersonCustomer(ExternalCustomer externalCustomer) {
         final String externalId = externalCustomer.getExternalId();
-        CustomerMatches matches = new CustomerMatches();
         Customer customer = this.customerDataLayer.findByExternalId(externalId);
+        boolean shouldCreate = (customer == null);
 
-        if (customer == null) {
-            customer = CustomerFactory.create(externalCustomer);
+        if (shouldCreate) {
+            customer = createCustomerRecord(
+                    CustomerFactory.create(externalCustomer)
+            );
         } else {
             validateCustomerType(customer, externalId, CustomerType.PERSON);
         }
 
         customer.populateFields(externalCustomer);
-        matches.setCustomer(customer);
+        updateShoppingList(customer, externalCustomer.getShoppingLists());
 
-        return matches;
+        return shouldCreate;
     }
 
     public Customer updateCustomerRecord(Customer customer) {
@@ -78,9 +81,25 @@ public class CustomerDataAccess {
         return customerDataLayer.createCustomerRecord(customer);
     }
 
-    public void updateShoppingList(Customer customer, ShoppingList consumerShoppingList) {
-        customer.addShoppingList(consumerShoppingList);
-        customerDataLayer.updateShoppingList(consumerShoppingList);
-        customerDataLayer.updateCustomerRecord(customer);
+    public boolean mergeCustomer(Customer customer) {
+        boolean shouldCreate = customer.getInternalId() == null;
+
+        if (shouldCreate) {
+            this.customerDataLayer.createCustomerRecord(customer);
+        } else {
+            this.customerDataLayer.updateCustomerRecord(customer);
+        }
+
+        return shouldCreate;
+    }
+
+    public void updateShoppingList(Customer customer, List<ShoppingList> consumerShoppingList) {
+        consumerShoppingList.forEach(
+                shoppingList -> {
+                    customer.addShoppingList(shoppingList);
+                    customerDataLayer.updateShoppingList(shoppingList);
+                    customerDataLayer.updateCustomerRecord(customer);
+                }
+        );
     }
 }
