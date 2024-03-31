@@ -45,6 +45,7 @@ class CustomerValidatorTest {
         Customer customer = new CompanyCustomer();
         customer.setCustomerType(CustomerType.COMPANY);
         String externalId = "45671";
+        customer.setExternalId(externalId);
 
         //when
         Customer companyCustomer = CustomerValidator.validateCompanyCustomer(customer, externalId);
@@ -52,14 +53,14 @@ class CustomerValidatorTest {
         //then
         assertNotNull(companyCustomer);
         assertTrue(companyCustomer instanceof CompanyCustomer);
-        assertEquals(externalId, customer.getInternalId());
+        assertEquals(externalId, customer.getExternalId());
     }
 
     @Test
     public void shouldThrowExceptionWhenExternalIdDiffersFromCustomerExternalId() {
         //given
         String externalId = "45671";
-        String customerExternalId = "45671";
+        String customerExternalId = "45672";
         String companyNumber = "0000-1111";
 
         //when

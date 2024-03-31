@@ -15,11 +15,7 @@ public class CustomerSync {
     }
 
     public boolean syncWithDataLayer(ExternalCustomer externalCustomer) {
-
-        if (externalCustomer.isCompany()) {
-            return customerDataAccess.loadCompanyCustomer(externalCustomer);
-        } else {
-            return customerDataAccess.loadPersonCustomer(externalCustomer);
-        }
+        return SynchronizerFactory.create(customerDataAccess, externalCustomer.isCompany())
+                .synchronizeData(externalCustomer);
     }
 }
