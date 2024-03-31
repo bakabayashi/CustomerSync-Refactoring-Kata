@@ -18,6 +18,7 @@ class PersonCustomer extends Customer {
         this.setName(externalCustomer.getName());
         this.setAddress(externalCustomer.getPostalAddress());
         this.setPreferredStore(externalCustomer.getPreferredStore());
+        this.bonusPointsBalance = externalCustomer.getBonusPointsBalance();
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class CustomerDataAccess {
+public class CustomerDataAccess {
 
     private final CustomerDataLayer customerDataLayer;
 
@@ -21,9 +21,9 @@ class CustomerDataAccess {
         boolean shouldCreate = customer.getInternalId() == null;
 
         if (shouldCreate) {
-            this.customerDataLayer.createCustomerRecord(customer);
+            customerDataLayer.createCustomerRecord(customer);
         } else {
-            this.customerDataLayer.updateCustomerRecord(customer);
+            customerDataLayer.updateCustomerRecord(customer);
         }
 
         return shouldCreate;

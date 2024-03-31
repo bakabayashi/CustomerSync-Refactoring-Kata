@@ -13,19 +13,17 @@ class PersonCustomerSynchronizer implements CustomerSynchronizer {
     public boolean synchronizeData(ExternalCustomer externalCustomer) {
         final String externalId = externalCustomer.getExternalId();
         Customer customer = customerDataAccess.findByExternalId(externalId);
-        boolean shouldCreate = (customer == null);
 
-        if (shouldCreate) {
-            customer = customerDataAccess.createCustomerRecord(
-                    CustomerFactory.create(externalCustomer)
-            );
+        if (customer == null) {
+            customer = CustomerFactory.create(externalCustomer);
         } else {
             validateCustomerType(customer, externalId, CustomerType.PERSON);
         }
 
         customer.populateFields(externalCustomer);
+        boolean created = customerDataAccess.mergeCustomer(customer);
         customerDataAccess.updateShoppingList(customer, externalCustomer.getShoppingLists());
 
-        return shouldCreate;
+        return created;
     }
 }
