@@ -18,13 +18,12 @@ public class CustomerSync {
 
         CustomerMatches customerMatches;
         if (externalCustomer.isCompany()) {
-            customerMatches = loadCompany(externalCustomer);
+            customerMatches = customerDataAccess.loadCompanyCustomer(externalCustomer);
         } else {
-            customerMatches = loadPerson(externalCustomer);
+            customerMatches = customerDataAccess.loadPersonCustomer(externalCustomer);
         }
 
         Customer customer = customerMatches.getCustomer();
-        populateFields(externalCustomer, customer);
 
         boolean created = false;
         if (customer.getInternalId() == null) {
@@ -33,7 +32,6 @@ public class CustomerSync {
         } else {
             this.customerDataAccess.updateCustomerRecord(customer);
         }
-        updateContactInfo(externalCustomer, customer);
 
         if (customerMatches.hasDuplicates()) {
             for (Customer duplicate : customerMatches.getDuplicates()) {
@@ -42,7 +40,6 @@ public class CustomerSync {
         }
 
         updateRelations(externalCustomer, customer);
-        updatePreferredStore(externalCustomer, customer);
 
         return created;
     }
@@ -60,31 +57,5 @@ public class CustomerSync {
         } else {
             this.customerDataAccess.updateCustomerRecord(duplicate);
         }
-    }
-
-    private void updatePreferredStore(ExternalCustomer externalCustomer, Customer customer) {
-        customer.setPreferredStore(externalCustomer.getPreferredStore());
-    }
-
-    private void populateFields(ExternalCustomer externalCustomer, Customer customer) {
-        customer.setName(externalCustomer.getName());
-        if (externalCustomer.isCompany()) {
-            customer.setCompanyNumber(externalCustomer.getCompanyNumber());
-            customer.setCustomerType(CustomerType.COMPANY);
-        } else {
-            customer.setCustomerType(CustomerType.PERSON);
-        }
-    }
-
-    private void updateContactInfo(ExternalCustomer externalCustomer, Customer customer) {
-        customer.setAddress(externalCustomer.getPostalAddress());
-    }
-
-    public CustomerMatches loadCompany(ExternalCustomer externalCustomer) {
-        return customerDataAccess.loadCompanyCustomer(externalCustomer);
-    }
-
-    public CustomerMatches loadPerson(ExternalCustomer externalCustomer) {
-        return customerDataAccess.loadPersonCustomer(externalCustomer);
     }
 }

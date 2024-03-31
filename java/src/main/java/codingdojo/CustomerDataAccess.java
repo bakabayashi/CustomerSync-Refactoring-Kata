@@ -15,41 +15,48 @@ public class CustomerDataAccess {
         final String externalId = externalCustomer.getExternalId();
         final String companyNumber = externalCustomer.getCompanyNumber();
         CustomerMatches matches = new CustomerMatches();
-        Customer matchByExternalId = this.customerDataLayer.findByExternalId(externalId);
-        if (matchByExternalId != null) {
-            validateCustomerType(matchByExternalId, externalId, CustomerType.COMPANY);
-            matches.setCustomer(matchByExternalId);
+        Customer customer = this.customerDataLayer.findByExternalId(externalId);
+
+        if (customer != null) {
+            validateCustomerType(customer, externalId, CustomerType.COMPANY);
             Customer matchByMasterId = this.customerDataLayer.findByMasterExternalId(externalId);
             if (matchByMasterId != null) {
                 matchByMasterId.setName(externalCustomer.getName());
                 matches.addDuplicate(matchByMasterId);
             }
 
-            String customerCompanyNumber = matchByExternalId.getCompanyNumber();
+            String customerCompanyNumber = customer.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) {
-                matchByExternalId.setMasterExternalId(null);
-                matchByExternalId.setName(externalCustomer.getName());
-                matches.addDuplicate(matchByExternalId);
-                matches.setCustomer(createCustomer(externalCustomer));
+                customer.setMasterExternalId(null);
+                customer.setName(externalCustomer.getName());
+                matches.addDuplicate(customer);
+                customer = createCustomer(externalCustomer);
             }
         } else {
-            Customer matchByCompanyNumber = this.customerDataLayer.findByCompanyNumber(companyNumber);
-            if (matchByCompanyNumber != null) {
-                validateCustomerType(matchByCompanyNumber, externalId, CustomerType.COMPANY);
-                matches.setCustomer(matchByCompanyNumber);
-                String customerExternalId = matchByCompanyNumber.getExternalId();
+            customer = this.customerDataLayer.findByCompanyNumber(companyNumber);
+            if (customer != null) {
+                validateCustomerType(customer, externalId, CustomerType.COMPANY);
+                matches.setCustomer(customer);
+                String customerExternalId = customer.getExternalId();
                 validateExternalId(customerExternalId, externalId, companyNumber);
-                matchByCompanyNumber.setExternalId(externalId);
-                matchByCompanyNumber.setMasterExternalId(externalId);
+                customer.setExternalId(externalId);
+                customer.setMasterExternalId(externalId);
                 Customer duplicate = new Customer();
                 duplicate.setName(externalCustomer.getName());
                 duplicate.setExternalId(externalCustomer.getExternalId());
                 duplicate.setMasterExternalId(externalCustomer.getExternalId());
                 matches.addDuplicate(duplicate);
             } else {
-                matches.setCustomer(createCustomer(externalCustomer));
+                customer = createCustomer(externalCustomer);
             }
         }
+
+        customer.setName(externalCustomer.getName());
+        customer.setCompanyNumber(externalCustomer.getCompanyNumber());
+        customer.setCustomerType(CustomerType.COMPANY);
+        customer.setAddress(externalCustomer.getPostalAddress());
+        customer.setPreferredStore(externalCustomer.getPreferredStore());
+        matches.setCustomer(customer);
 
         return matches;
     }
@@ -57,14 +64,19 @@ public class CustomerDataAccess {
     public CustomerMatches loadPersonCustomer(ExternalCustomer externalCustomer) {
         final String externalId = externalCustomer.getExternalId();
         CustomerMatches matches = new CustomerMatches();
-        Customer matchByPersonalNumber = this.customerDataLayer.findByExternalId(externalId);
+        Customer customer = this.customerDataLayer.findByExternalId(externalId);
 
-        if(matchByPersonalNumber == null) {
-            matches.setCustomer(createCustomer(externalCustomer));
+        if (customer == null) {
+            customer = createCustomer(externalCustomer);
         } else {
-            validateCustomerType(matchByPersonalNumber, externalId, CustomerType.PERSON);
-            matches.setCustomer(matchByPersonalNumber);
+            validateCustomerType(customer, externalId, CustomerType.PERSON);
         }
+
+        customer.setName(externalCustomer.getName());
+        customer.setCustomerType(CustomerType.PERSON);
+        customer.setAddress(externalCustomer.getPostalAddress());
+        customer.setPreferredStore(externalCustomer.getPreferredStore());
+        matches.setCustomer(customer);
 
         return matches;
     }
