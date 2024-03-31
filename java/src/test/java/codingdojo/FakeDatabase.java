@@ -20,8 +20,8 @@ public class FakeDatabase implements CustomerDataLayer {
         if (customer.getMasterExternalId() != null) {
             this.customersByMasterExternalId.put(customer.getMasterExternalId(), customer);
         }
-        if (customer.getCompanyNumber() != null) {
-            this.customersByCompanyNumber.put(customer.getCompanyNumber(), customer);
+        if (customer instanceof CompanyCustomer && ((CompanyCustomer) customer).getCompanyNumber() != null) {
+            this.customersByCompanyNumber.put(((CompanyCustomer) customer).getCompanyNumber() , customer);
         }
         if (customer.getShoppingLists() != null) {
             shoppingLists.addAll(customer.getShoppingLists());

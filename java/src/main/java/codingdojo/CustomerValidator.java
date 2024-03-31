@@ -14,4 +14,9 @@ public class CustomerValidator {
                     + externalId + " instead found " + customerExternalId);
         }
     }
+
+    static CompanyCustomer validateCompanyCustomer(Customer customer, String externalId) {
+        validateCustomerType(customer, externalId, CustomerType.COMPANY);
+        return (CompanyCustomer) customer;
+    }
 }

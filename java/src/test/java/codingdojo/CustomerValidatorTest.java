@@ -12,7 +12,7 @@ class CustomerValidatorTest {
     @Test
     public void shouldThrowExceptionWhenWrongCustomerType() {
         //given
-        Customer customer = new Customer();
+        Customer customer = new CompanyCustomer();
         customer.setCustomerType(CustomerType.COMPANY);
         String externalId = "45671";
 
@@ -28,7 +28,7 @@ class CustomerValidatorTest {
     @Test
     public void shouldNotThrowExceptionWhenCorrectCustomerType() {
         //given
-        Customer customer = new Customer();
+        Customer customer = new CompanyCustomer();
         customer.setCustomerType(CustomerType.PERSON);
         String externalId = "45671";
 
@@ -37,6 +37,22 @@ class CustomerValidatorTest {
         assertDoesNotThrow(
                 () -> CustomerValidator.validateCustomerType(customer, externalId, CustomerType.PERSON)
         );
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenCorrectCompanyCustomerTypeAndReturnCompanyCustomer() {
+        //given
+        Customer customer = new CompanyCustomer();
+        customer.setCustomerType(CustomerType.COMPANY);
+        String externalId = "45671";
+
+        //when
+        Customer companyCustomer = CustomerValidator.validateCompanyCustomer(customer, externalId);
+
+        //then
+        assertNotNull(companyCustomer);
+        assertTrue(companyCustomer instanceof CompanyCustomer);
+        assertEquals(externalId, customer.getInternalId());
     }
 
     @Test

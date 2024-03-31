@@ -1,7 +1,6 @@
 package codingdojo;
 
-import static codingdojo.CustomerValidator.validateCustomerType;
-import static codingdojo.CustomerValidator.validateExternalId;
+import static codingdojo.CustomerValidator.*;
 
 public class CustomerDataAccess {
 
@@ -18,19 +17,19 @@ public class CustomerDataAccess {
         Customer customer = this.customerDataLayer.findByExternalId(externalId);
 
         if (customer != null) {
-            validateCustomerType(customer, externalId, CustomerType.COMPANY);
+            CompanyCustomer companyCustomer = validateCompanyCustomer(customer, externalId);
             Customer matchByMasterId = this.customerDataLayer.findByMasterExternalId(externalId);
             if (matchByMasterId != null) {
                 matchByMasterId.setName(externalCustomer.getName());
                 matches.addDuplicate(matchByMasterId);
             }
 
-            String customerCompanyNumber = customer.getCompanyNumber();
+            String customerCompanyNumber = companyCustomer.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) {
-                customer.setMasterExternalId(null);
-                customer.setName(externalCustomer.getName());
-                matches.addDuplicate(customer);
-                customer = createCustomer(externalCustomer);
+                companyCustomer.setMasterExternalId(null);
+                companyCustomer.setName(externalCustomer.getName());
+                matches.addDuplicate(companyCustomer);
+                customer = CustomerFactory.create(externalCustomer);
             }
         } else {
             customer = this.customerDataLayer.findByCompanyNumber(companyNumber);
@@ -41,21 +40,14 @@ public class CustomerDataAccess {
                 validateExternalId(customerExternalId, externalId, companyNumber);
                 customer.setExternalId(externalId);
                 customer.setMasterExternalId(externalId);
-                Customer duplicate = new Customer();
-                duplicate.setName(externalCustomer.getName());
-                duplicate.setExternalId(externalCustomer.getExternalId());
-                duplicate.setMasterExternalId(externalCustomer.getExternalId());
+                Customer duplicate = CustomerFactory.create(externalCustomer);
                 matches.addDuplicate(duplicate);
             } else {
-                customer = createCustomer(externalCustomer);
+                customer = CustomerFactory.create(externalCustomer);
             }
         }
 
-        customer.setName(externalCustomer.getName());
-        customer.setCompanyNumber(externalCustomer.getCompanyNumber());
-        customer.setCustomerType(CustomerType.COMPANY);
-        customer.setAddress(externalCustomer.getPostalAddress());
-        customer.setPreferredStore(externalCustomer.getPreferredStore());
+        customer.populateFields(externalCustomer);
         matches.setCustomer(customer);
 
         return matches;
@@ -67,15 +59,12 @@ public class CustomerDataAccess {
         Customer customer = this.customerDataLayer.findByExternalId(externalId);
 
         if (customer == null) {
-            customer = createCustomer(externalCustomer);
+            customer = CustomerFactory.create(externalCustomer);
         } else {
             validateCustomerType(customer, externalId, CustomerType.PERSON);
         }
 
-        customer.setName(externalCustomer.getName());
-        customer.setCustomerType(CustomerType.PERSON);
-        customer.setAddress(externalCustomer.getPostalAddress());
-        customer.setPreferredStore(externalCustomer.getPreferredStore());
+        customer.populateFields(externalCustomer);
         matches.setCustomer(customer);
 
         return matches;
@@ -93,12 +82,5 @@ public class CustomerDataAccess {
         customer.addShoppingList(consumerShoppingList);
         customerDataLayer.updateShoppingList(consumerShoppingList);
         customerDataLayer.updateCustomerRecord(customer);
-    }
-
-    private Customer createCustomer(ExternalCustomer externalCustomer) {
-        Customer customer = new Customer();
-        customer.setExternalId(externalCustomer.getExternalId());
-        customer.setMasterExternalId(externalCustomer.getExternalId());
-        return customer;
     }
 }
