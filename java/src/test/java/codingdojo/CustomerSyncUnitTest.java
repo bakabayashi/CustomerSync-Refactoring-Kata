@@ -1,11 +1,12 @@
 package codingdojo;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,9 +26,10 @@ class CustomerSyncUnitTest {
         when(externalCustomer.getCompanyNumber()).thenReturn("12345");
 
         //when
-        sync.syncWithDataLayer(externalCustomer);
+        boolean created = sync.syncWithDataLayer(externalCustomer);
 
         //then
+        assertFalse(created);
         verify(externalCustomer, times(2)).getCompanyNumber();
     }
 
@@ -36,14 +38,13 @@ class CustomerSyncUnitTest {
         //given
         CustomerSync sync = new CustomerSync(customerDataAccess);
         when(externalCustomer.isCompany()).thenReturn(false);
-
-        Customer mockedCustomer = Mockito.mock(Customer.class);
-        when(customerDataAccess.createCustomerRecord(any(Customer.class))).thenReturn(mockedCustomer);
+        when(customerDataAccess.mergeCustomer(any(Customer.class))).thenReturn(true);
 
         //when
-        sync.syncWithDataLayer(externalCustomer);
+        boolean created = sync.syncWithDataLayer(externalCustomer);
 
         //then
+        assertTrue(created);
         verify(externalCustomer, never()).getCompanyNumber();
     }
 }

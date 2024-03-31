@@ -3,14 +3,14 @@ package codingdojo;
 import java.util.Objects;
 
 
-public class PersonCustomer extends Customer {
+class PersonCustomer extends Customer {
 
     PersonCustomer() {
         this.setCustomerType(CustomerType.PERSON);
     }
 
     @Override
-    public void populateFields(ExternalCustomer externalCustomer) {
+    void populateFields(ExternalCustomer externalCustomer) {
         this.setName(externalCustomer.getName());
         this.setAddress(externalCustomer.getPostalAddress());
         this.setPreferredStore(externalCustomer.getPreferredStore());

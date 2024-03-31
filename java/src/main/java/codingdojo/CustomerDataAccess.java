@@ -21,9 +21,9 @@ public class CustomerDataAccess {
         boolean shouldCreate = customer.getInternalId() == null;
 
         if (shouldCreate) {
-            this.customerDataLayer.createCustomerRecord(customer);
+            customerDataLayer.createCustomerRecord(customer);
         } else {
-            this.customerDataLayer.updateCustomerRecord(customer);
+            customerDataLayer.updateCustomerRecord(customer);
         }
 
         return shouldCreate;

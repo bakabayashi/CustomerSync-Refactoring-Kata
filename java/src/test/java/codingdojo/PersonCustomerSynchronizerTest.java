@@ -49,14 +49,14 @@ class PersonCustomerSynchronizerTest {
         PersonCustomerSynchronizer synchronizer = new PersonCustomerSynchronizer(customerDataAccess);
         String externalId = "12345";
         when(externalCustomer.getExternalId()).thenReturn(externalId);
-        when(customerDataAccess.createCustomerRecord(any(Customer.class))).thenReturn(customer);
+        when(customerDataAccess.mergeCustomer(any(Customer.class))).thenReturn(true);
 
         //when
         boolean newlyCreated = synchronizer.synchronizeData(externalCustomer);
 
         //then
         assertTrue(newlyCreated);
-        verify(customer).populateFields(externalCustomer);
-        verify(customerDataAccess).updateShoppingList(customer, new ArrayList<>());
+        verify(customerDataAccess).mergeCustomer(any(Customer.class));
+        verify(customerDataAccess).updateShoppingList(any(Customer.class), anyList());
     }
 }

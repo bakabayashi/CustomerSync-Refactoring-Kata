@@ -5,16 +5,16 @@ import static codingdojo.CustomerValidator.*;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CompanyCustomerSynchronizer implements CustomerSynchronizer {
+class CompanyCustomerSynchronizer implements CustomerSynchronizer {
 
     private final CustomerDataAccess customerDataAccess;
 
     @Override
     public boolean synchronizeData(ExternalCustomer externalCustomer) {
-        Customer customer = this.customerDataAccess.findByExternalId(externalCustomer.getExternalId());
+        Customer customer = customerDataAccess.findByExternalId(externalCustomer.getExternalId());
 
         if (customer == null) {
-            Customer customerByCompanyNumber = this.customerDataAccess.findByCompanyNumber(externalCustomer.getCompanyNumber());
+            Customer customerByCompanyNumber = customerDataAccess.findByCompanyNumber(externalCustomer.getCompanyNumber());
 
             if (customerByCompanyNumber == null) {
                 customer = CustomerFactory.create(externalCustomer);
@@ -57,7 +57,7 @@ public class CompanyCustomerSynchronizer implements CustomerSynchronizer {
     }
 
     private void checkForMasterExternalIdDuplicate(ExternalCustomer externalCustomer, String externalId) {
-        Customer customerByMasterExternalId = this.customerDataAccess.findByMasterExternalId(externalId);
+        Customer customerByMasterExternalId = customerDataAccess.findByMasterExternalId(externalId);
         if (customerByMasterExternalId != null) {
             customerByMasterExternalId.setName(externalCustomer.getName());
             customerDataAccess.updateCustomerRecord(customerByMasterExternalId);

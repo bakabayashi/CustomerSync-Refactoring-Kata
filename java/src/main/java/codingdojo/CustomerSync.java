@@ -1,7 +1,5 @@
 package codingdojo;
 
-import java.util.List;
-
 public class CustomerSync {
 
     private final CustomerDataAccess customerDataAccess;
