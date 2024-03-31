@@ -298,6 +298,7 @@ public class CustomerSyncTest {
         externalCustomer.setAddress(new Address("123 main st", "Stockholm", "SE-123 45"));
         externalCustomer.setPreferredStore("Nordstan");
         externalCustomer.setShoppingLists(Arrays.asList(new ShoppingList("lipstick", "foundation")));
+        externalCustomer.setBonusPointsBalance(105);
         return externalCustomer;
     }
 

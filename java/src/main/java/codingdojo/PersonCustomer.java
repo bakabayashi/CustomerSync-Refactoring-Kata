@@ -2,8 +2,12 @@ package codingdojo;
 
 import java.util.Objects;
 
+import lombok.Getter;
 
+@Getter
 class PersonCustomer extends Customer {
+
+    private Integer bonusPointsBalance = 0;
 
     PersonCustomer() {
         this.setCustomerType(CustomerType.PERSON);
