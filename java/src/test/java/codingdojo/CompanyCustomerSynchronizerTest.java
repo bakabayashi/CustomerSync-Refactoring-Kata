@@ -159,7 +159,7 @@ class CompanyCustomerSynchronizerTest {
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerDataLayer).createCustomerRecord(customerCaptor.capture());
         assertEquals(externalId, customerCaptor.getValue().getExternalId());
-        verify(customerDataLayer, times(3)).updateCustomerRecord(customer);
+        verify(customerDataLayer, times(2)).updateCustomerRecord(customer);
     }
 
     @Test
