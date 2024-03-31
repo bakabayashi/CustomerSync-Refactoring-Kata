@@ -1,5 +1,5 @@
 package codingdojo;
 
-public interface CustomerSynchronizer {
+interface CustomerSynchronizer {
     boolean synchronizeData(ExternalCustomer externalCustomer);
 }

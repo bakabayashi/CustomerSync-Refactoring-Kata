@@ -5,7 +5,7 @@ import static codingdojo.CustomerValidator.validateCustomerType;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class PersonCustomerSynchronizer implements CustomerSynchronizer {
+class PersonCustomerSynchronizer implements CustomerSynchronizer {
 
     private final CustomerDataAccess customerDataAccess;
 

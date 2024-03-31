@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CustomerDataAccess {
+class CustomerDataAccess {
 
     private final CustomerDataLayer customerDataLayer;
 

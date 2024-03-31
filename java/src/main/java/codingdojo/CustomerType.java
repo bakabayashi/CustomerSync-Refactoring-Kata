@@ -1,5 +1,5 @@
 package codingdojo;
 
-public enum CustomerType {
+enum CustomerType {
     PERSON, COMPANY
 }

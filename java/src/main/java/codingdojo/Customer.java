@@ -2,7 +2,6 @@ package codingdojo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,11 +18,11 @@ public abstract class Customer {
     private String name;
     private CustomerType customerType;
 
-    public void addShoppingList(ShoppingList consumerShoppingList) {
-        ArrayList<ShoppingList> newList = new ArrayList<ShoppingList>(this.shoppingLists);
+    void addShoppingList(ShoppingList consumerShoppingList) {
+        ArrayList<ShoppingList> newList = new ArrayList<>(this.shoppingLists);
         newList.add(consumerShoppingList);
         this.setShoppingLists(newList);
     }
 
-    public abstract void populateFields(ExternalCustomer externalCustomer);
+    abstract void populateFields(ExternalCustomer externalCustomer);
 }

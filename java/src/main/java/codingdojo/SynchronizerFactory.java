@@ -1,6 +1,6 @@
 package codingdojo;
 
-public class SynchronizerFactory {
+class SynchronizerFactory {
 
     static CustomerSynchronizer create(CustomerDataAccess customerDataAccess, boolean isCompany) {
         if (isCompany) {

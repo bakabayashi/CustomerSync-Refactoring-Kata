@@ -1,6 +1,6 @@
 package codingdojo;
 
-public class CustomerFactory {
+class CustomerFactory {
 
     static Customer create(ExternalCustomer externalCustomer) {
         Customer customer;

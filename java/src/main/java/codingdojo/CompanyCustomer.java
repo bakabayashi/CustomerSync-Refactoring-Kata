@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CompanyCustomer extends Customer {
+class CompanyCustomer extends Customer {
     private String companyNumber;
 
     CompanyCustomer() {
@@ -15,7 +15,7 @@ public class CompanyCustomer extends Customer {
     }
 
     @Override
-    public void populateFields(ExternalCustomer externalCustomer) {
+    void populateFields(ExternalCustomer externalCustomer) {
         this.setCompanyNumber(externalCustomer.getCompanyNumber());
         this.setName(externalCustomer.getName());
         this.setAddress(externalCustomer.getPostalAddress());

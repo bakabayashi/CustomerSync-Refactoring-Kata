@@ -1,6 +1,6 @@
 package codingdojo;
 
-public class CustomerValidator {
+class CustomerValidator {
 
     static void validateCustomerType(Customer customer, String externalId, CustomerType customerType) {
         if (customer != null && customerType != customer.getCustomerType()) {
