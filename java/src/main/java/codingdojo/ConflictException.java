@@ -1,7 +1,7 @@
 package codingdojo;
 
-public class ConflictException extends RuntimeException {
-    public ConflictException(String s) {
+class ConflictException extends RuntimeException {
+    ConflictException(String s) {
         super(s);
     }
 }

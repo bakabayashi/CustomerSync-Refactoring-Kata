@@ -47,10 +47,11 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalPrivatePerson();
         externalCustomer.setExternalId(externalId);
 
-        Customer customer = new Customer();
+        PersonCustomer customer = new PersonCustomer();
         customer.setCustomerType(CustomerType.PERSON);
         customer.setInternalId("67576");
         customer.setExternalId(externalId);
+        customer.setBonusPointsBalance(10);
 
         FakeDatabase db = new FakeDatabase();
         db.addCustomer(customer);
@@ -136,7 +137,7 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalCompany();
         externalCustomer.setExternalId(externalId);
 
-        Customer customer = new Customer();
+        Customer customer = new PersonCustomer();
         customer.setCustomerType(CustomerType.PERSON);
         customer.setInternalId("45435");
         customer.setExternalId(externalId);
@@ -161,7 +162,7 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalCompany();
         externalCustomer.setExternalId(externalId);
 
-        Customer customer = createCustomerWithSameCompanyAs(externalCustomer);
+        CompanyCustomer customer = createCustomerWithSameCompanyAs(externalCustomer);
         customer.setExternalId(externalId);
         customer.setCompanyNumber("000-3234");
 
@@ -187,7 +188,7 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalCompany();
         externalCustomer.setCompanyNumber(companyNumber);
 
-        Customer customer = createCustomerWithSameCompanyAs(externalCustomer);
+        CompanyCustomer customer = createCustomerWithSameCompanyAs(externalCustomer);
         customer.setCompanyNumber(companyNumber);
         customer.addShoppingList(new ShoppingList("eyeliner", "mascara", "blue bombe eyeshadow"));
 
@@ -213,7 +214,7 @@ public class CustomerSyncTest {
         externalCustomer.setCompanyNumber(companyNumber);
         externalCustomer.setExternalId("45646");
 
-        Customer customer = createCustomerWithSameCompanyAs(externalCustomer);
+        CompanyCustomer customer = createCustomerWithSameCompanyAs(externalCustomer);
         customer.setCompanyNumber(companyNumber);
         customer.setExternalId("conflicting id");
 
@@ -238,7 +239,7 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalPrivatePerson();
         externalCustomer.setExternalId(externalId);
 
-        Customer customer = new Customer();
+        CompanyCustomer customer = new CompanyCustomer();
         customer.setCustomerType(CustomerType.COMPANY);
         customer.setCompanyNumber("32423-342");
         customer.setInternalId("45435");
@@ -268,7 +269,7 @@ public class CustomerSyncTest {
         customer.setExternalId(externalId);
         customer.setName("company 1");
 
-        Customer customer2 = new Customer();
+        CompanyCustomer customer2 = new CompanyCustomer();
         customer2.setCompanyNumber(externalCustomer.getCompanyNumber());
         customer2.setCustomerType(CustomerType.COMPANY);
         customer2.setInternalId("45435234");
@@ -298,6 +299,7 @@ public class CustomerSyncTest {
         externalCustomer.setAddress(new Address("123 main st", "Stockholm", "SE-123 45"));
         externalCustomer.setPreferredStore("Nordstan");
         externalCustomer.setShoppingLists(Arrays.asList(new ShoppingList("lipstick", "foundation")));
+        externalCustomer.setBonusPointsBalance(105);
         return externalCustomer;
     }
 
@@ -312,8 +314,8 @@ public class CustomerSyncTest {
         return externalCustomer;
     }
 
-    private Customer createCustomerWithSameCompanyAs(ExternalCustomer externalCustomer) {
-        Customer customer = new Customer();
+    private CompanyCustomer createCustomerWithSameCompanyAs(ExternalCustomer externalCustomer) {
+        CompanyCustomer customer = new CompanyCustomer();
         customer.setCompanyNumber(externalCustomer.getCompanyNumber());
         customer.setCustomerType(CustomerType.COMPANY);
         customer.setInternalId("45435");

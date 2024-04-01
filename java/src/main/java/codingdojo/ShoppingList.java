@@ -10,7 +10,7 @@ public class ShoppingList {
         this.products = Arrays.asList(products);
     }
 
-    public List<String> getProducts() {
+    List<String> getProducts() {
         return products;
     }
 
