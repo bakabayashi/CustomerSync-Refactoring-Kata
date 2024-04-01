@@ -6,6 +6,7 @@ All Customers {
         externalId='null'
         masterExternalId='null'
         companyNumber='12345'
+        bonusPointsBalance=''
         internalId='45435'
         name='null'
         customerType=COMPANY
@@ -23,6 +24,7 @@ ExternalCustomer {
     companyNumber='12345'
     name='Acme Inc.'
     preferredStore='null'
+    bonusPointsBalance=null
     address='123 main st, SE-123 45 Helsingborg'
     shoppingLists=[[lipstick, blusher]]
 }
@@ -34,6 +36,7 @@ All Customers {
         externalId='12345'
         masterExternalId='12345'
         companyNumber='12345'
+        bonusPointsBalance=''
         internalId='45435'
         name='Acme Inc.'
         customerType=COMPANY

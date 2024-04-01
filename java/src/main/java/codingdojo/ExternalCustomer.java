@@ -25,12 +25,14 @@ public class ExternalCustomer {
     @Getter
     private String companyNumber;
 
-    public boolean isCompany() {
-        return companyNumber != null;
-    }
+    @Getter
+    private Integer bonusPointsBalance;
 
     public Address getPostalAddress() {
         return address;
+    }
+    public boolean isCompany() {
+        return companyNumber != null;
     }
 
 }

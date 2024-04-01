@@ -47,10 +47,11 @@ public class CustomerSyncTest {
         ExternalCustomer externalCustomer = createExternalPrivatePerson();
         externalCustomer.setExternalId(externalId);
 
-        Customer customer = new PersonCustomer();
+        PersonCustomer customer = new PersonCustomer();
         customer.setCustomerType(CustomerType.PERSON);
         customer.setInternalId("67576");
         customer.setExternalId(externalId);
+        customer.setBonusPointsBalance(10);
 
         FakeDatabase db = new FakeDatabase();
         db.addCustomer(customer);
@@ -298,6 +299,7 @@ public class CustomerSyncTest {
         externalCustomer.setAddress(new Address("123 main st", "Stockholm", "SE-123 45"));
         externalCustomer.setPreferredStore("Nordstan");
         externalCustomer.setShoppingLists(Arrays.asList(new ShoppingList("lipstick", "foundation")));
+        externalCustomer.setBonusPointsBalance(105);
         return externalCustomer;
     }
 

@@ -11,7 +11,13 @@ public class CustomerPrinter {
         if(customer instanceof CompanyCustomer) {
             sb.append("\n" + indent + "    companyNumber='" + ((CompanyCustomer) customer).getCompanyNumber() + '\'' );
         } else {
-            sb.append("\n" + indent + "    companyNumber='" + null + '\'' );
+            sb.append("\n" + indent + "    companyNumber=''" );
+        }
+
+        if(customer instanceof PersonCustomer) {
+            sb.append("\n" + indent + "    bonusPointsBalance='" + ((PersonCustomer) customer).getBonusPointsBalance() + '\'' );
+        } else {
+            sb.append("\n" + indent + "    bonusPointsBalance=''" );
         }
 
         sb.append("\n" + indent + "    internalId='" + customer.getInternalId() + '\'' );

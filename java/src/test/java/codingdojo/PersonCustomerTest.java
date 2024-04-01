@@ -21,10 +21,12 @@ class PersonCustomerTest {
         String name = "name";
         Address address = new Address("street", "city", "code");
         String preferredStore = "preferred store";
+        int bonusPointsBalance = 105;
 
         when(externalCustomer.getName()).thenReturn(name);
         when(externalCustomer.getPostalAddress()).thenReturn(address);
         when(externalCustomer.getPreferredStore()).thenReturn(preferredStore);
+        when(externalCustomer.getBonusPointsBalance()).thenReturn(bonusPointsBalance);
 
         //when
         customer.populateFields(externalCustomer);
@@ -33,5 +35,6 @@ class PersonCustomerTest {
         assertEquals(name, customer.getName());
         assertEquals(address, customer.getAddress());
         assertEquals(preferredStore, customer.getPreferredStore());
+        assertEquals(bonusPointsBalance, customer.getBonusPointsBalance());
     }
 }
